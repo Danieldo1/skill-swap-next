@@ -54,12 +54,7 @@ console.log('Client: isConfirmed', isConfirmed);
         {user && (
           <>
             <span className="text-gray-700">{user.user_metadata.name || user.email}</span>
-            {!isConfirmed && (
-              <span className="text-yellow-600 ml-2">
-                (Unconfirmed - Check your email)
-              </span>
-            )}
-            <button onClick={handleLogout} className="text-gray-700 hover:text-gray-900 ml-2">Logout</button>
+            <button onClick={handleLogout} className="text-gray-700 hover:text-gray-900">Logout</button>
           </>
         )}
       </div>
