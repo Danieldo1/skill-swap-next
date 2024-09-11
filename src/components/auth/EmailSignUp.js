@@ -1,28 +1,49 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FcGoogle } from 'react-icons/fc';
+import { signup } from '@/app/(auth)/register/actions';
+import { useRouter } from 'next/navigation';
 
 export default function EmailSignUpForm({ onSubmit, onGoogleSignUp }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit({ name, email, password });
+    setError('');
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('password', password);
+
+    try {
+      await signup(formData);
+      // If successful, the action will handle the redirect
+      router.push("/confirm-email");
+    } catch (error) {
+      setError('An error occurred during sign up. Please try again.');
+      console.error('Sign up error:', error);
+    }
   };
+
+
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-2 text-center">Sign Up</h2>
       <p className="text-gray-600 mb-6 text-center">Let's get started with your 30 days free trial</p>
-      
+      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
           <input
             type="text"
             id="name"
+            name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -34,6 +55,7 @@ export default function EmailSignUpForm({ onSubmit, onGoogleSignUp }) {
           <input
             type="email"
             id="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -45,6 +67,7 @@ export default function EmailSignUpForm({ onSubmit, onGoogleSignUp }) {
           <input
             type="password"
             id="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"

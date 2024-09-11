@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import EmailSignUpForm from '@/components/auth/EmailSignUp';
 import SignUpChoice from '@/components/auth/SignUpChoice';
+import { signup } from './actions';
 
 export default function Register() {
   const [showEmailForm, setShowEmailForm] = useState(false);
@@ -15,35 +16,35 @@ export default function Register() {
     setShowEmailForm(true);
   };
 
-  const handleSignUp = async ({ name, email, password }) => {
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            name,
-          },
-        },
-      });
+  // const handleSignUp = async ({ name, email, password }) => {
+  //   try {
+  //     const { data, error } = await supabase.auth.signUp({
+  //       email,
+  //       password,
+  //       options: {
+  //         data: {
+  //           name,
+  //         },
+  //       },
+  //     });
 
-      if (error) throw error;
+  //     if (error) throw error;
 
-      // If signup is successful, create a profile for the user
-      if (data.user) {
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert({ id: data.user.id, name, email });
+  //     // If signup is successful, create a profile for the user
+  //     if (data.user) {
+  //       const { error: profileError } = await supabase
+  //         .from('profiles')
+  //         .insert({ id: data.user.id, name, email });
 
-        if (profileError) throw profileError;
-      }
+  //       if (profileError) throw profileError;
+  //     }
 
-      alert('Check your email for the confirmation link!');
-      router.push('/login');
-    } catch (error) {
-      alert(error.message);
-    }
-  };
+  //     alert('Check your email for the confirmation link!');
+  //     router.push('/login');
+  //   } catch (error) {
+  //     alert(error.message);
+  //   }
+  // };
 
   const handleGoogleSignUp = async () => {
     try {
@@ -62,7 +63,7 @@ export default function Register() {
   return (
     <div>
       {showEmailForm ? (
-        <EmailSignUpForm onSubmit={handleSignUp} onGoogleSignUp={handleGoogleSignUp} />
+        <EmailSignUpForm onSubmit={signup} onGoogleSignUp={handleGoogleSignUp} />
       ) : (
         <SignUpChoice onEmailChoice={handleEmailChoice} onGoogleSignUp={handleGoogleSignUp} />
       )}

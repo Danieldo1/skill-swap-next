@@ -1,6 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
-import NavBar from "@/components/Navbar";
+import NavBar from "@/components/nav/Navbar";
 import { Toaster } from "react-hot-toast";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
